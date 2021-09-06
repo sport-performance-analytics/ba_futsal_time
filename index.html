@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
+  <script lang="javascript" src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.0/FileSaver.min.js"></script>
+  <link rel="stylesheet" href="style.css">
+  <title>BreakAway Futsal: Time</title>
+</head>
+<body>
+  <div id="app-container">
+    <div id="grid-container">
+      <div class="panel header" id="header">
+        <img src="breakaway.png" alt="ba logo" id="ba-logo-img">
+        <label class="load-file" id="lbl-head-team">
+          <input type="file" class="head-input" id="head-team">
+          Load Team
+        </label>
+        <label class="load-file" id="lbl-head-match">
+          <input type="file" class="head-input" id="head-match">
+          Load Match
+        </label>
+        <button class="button-1 head" id="head-save">Save Match</button>
+        <button class="button-1 head" id="head-export">Export Data</button>
+      </div>
+      <div class="panel" id="pnl-time">
+        <label class="txt-lbl" for="period" id="lbl-period">PERIOD:</label>
+        <p class="txt-1 period break" id="period">0</p>
+        <button class="button-1 pause" id="pause">PAUSE</button>
+        <button class="button-1 break" id="break">BREAK</button>
+        <button class="button-1 kickoff" id="kick-off">KICK OFF</button>
+        <label class="txt-lbl" for="clock-main" id="lbl-clock-main">TIME:</label>
+        <p class="clock break" id="clock-main">00:00</p>
+      </div>
+      <div class="panel" id="pnl-stop">
+        <button class="button-1 stop" id="stoppage">STOPPAGE</button>
+        <label class="txt-lbl" for="clock-play" id="lbl-clock-play">PLAY TIME:</label>
+        <p class="clock break" id="clock-play">20:00</p>
+      </div>
+      <div class="panel" id="pnl-match">
+        <p class="txt-1" id="home">HOME TEAM</p>
+        <p class="txt-1" id="away">AWAY TEAM</p>
+        <button class="button-1 normal" id="goal-h">Home<br />Goal</button>
+        <button class="button-1 normal" id="goal-a">Away<br />Goal</button>
+        <p class="txt-1" id="score-h">0</p>
+        <p class="txt-1" id="score-a">0</p>
+      </div>
+      <div class="panel" id="pnl-field">
+        <div class="player active" id="play1">
+            <p class="jersey-no" id="no1">1.</p>
+            <p class="jersey-name" id="name1">Player</p>
+            <p class="jersey-rot" id="rot1">0</p>
+            <p class="jersey-time" id="time1">00:00</p>
+            <p class="jersey-wr" id="wr1">1.00</p>
+            <button class="jersey topl" id="btn1"></button>
+        </div>
+        <div class="player active" id="play2">
+            <p class="jersey-no" id="no2">2.</p>
+            <p class="jersey-name" id="name2">Player</p>
+            <p class="jersey-rot" id="rot2">0</p>
+            <p class="jersey-time" id="time2">00:00</p>
+            <p class="jersey-wr" id="wr2">1.00</p>
+            <button class="jersey" id="btn2"></button>
+        </div>
+        <div class="player active" id="play3">
+            <p class="jersey-no" id="no3">3.</p>
+            <p class="jersey-name" id="name3">Player</p>
+            <p class="jersey-rot" id="rot3">0</p>
+            <p class="jersey-time" id="time3">00:00</p>
+            <p class="jersey-wr" id="wr3">1.00</p>
+            <button class="jersey" id="btn3"></button>
+        </div>
+        <div class="player active" id="play4">
+          <p class="jersey-no" id="no4">4.</p>
+          <p class="jersey-name" id="name4">Player</p>
+          <p class="jersey-rot" id="rot4">0</p>
+          <p class="jersey-time" id="time4">00:00</p>
+          <p class="jersey-wr" id="wr4">1.00</p>
+          <button class="jersey" id="btn4"></button>
+        </div>
+        <div class="player active" id="play5">
+          <p class="jersey-no" id="no5">5.</p>
+          <p class="jersey-name" id="name5">Player</p>
+          <p class="jersey-rot" id="rot5">0</p>
+          <p class="jersey-time" id="time5">00:00</p>
+          <p class="jersey-wr" id="wr5">1.00</p>
+          <button class="jersey" id="btn5"></button>
+        </div>
+        <div class="player" id="play6">
+          <p class="jersey-no" id="no6">6.</p>
+          <p class="jersey-name" id="name6">Player</p>
+          <p class="jersey-rot" id="rot6">0</p>
+          <p class="jersey-time" id="time6">00:00</p>
+          <p class="jersey-wr" id="wr6">1.00</p>
+          <button class="jersey" id="btn6"></button>
+        </div>
+        <div class="player" id="play7">
+            <p class="jersey-no" id="no7">7.</p>
+            <p class="jersey-name" id="name7">Player</p>
+            <p class="jersey-rot" id="rot7">0</p>
+            <p class="jersey-time" id="time7">00:00</p>
+            <p class="jersey-wr" id="wr7">1.00</p>
+            <button class="jersey" id="btn7"></button>
+        </div>
+        <div class="player" id="play8">
+            <p class="jersey-no" id="no8">8.</p>
+            <p class="jersey-name" id="name8">Player</p>
+            <p class="jersey-rot" id="rot8">0</p>
+            <p class="jersey-time" id="time8">00:00</p>
+            <p class="jersey-wr" id="wr8">1.00</p>
+            <button class="jersey" id="btn8"></button>
+        </div>
+        <div class="player" id="play9">
+            <p class="jersey-no" id="no9">9.</p>
+            <p class="jersey-name" id="name9">Player</p>
+            <p class="jersey-rot" id="rot9">0</p>
+            <p class="jersey-time" id="time9">00:00</p>
+            <p class="jersey-wr" id="wr9">1.00</p>
+            <button class="jersey" id="btn9"></button>
+        </div>
+        <div class="player" id="play10">
+            <p class="jersey-no" id="no10">10.</p>
+            <p class="jersey-name" id="name10">Player</p>
+            <p class="jersey-rot" id="rot10">0</p>
+            <p class="jersey-time" id="time10">00:00</p>
+            <p class="jersey-wr" id="wr10">1.00</p>
+            <button class="jersey" id="btn10"></button>
+        </div>
+        <div class="player" id="play11">
+            <p class="jersey-no" id="no11">11.</p>
+            <p class="jersey-name" id="name11">Player</p>
+            <p class="jersey-rot" id="rot11">0</p>
+            <p class="jersey-time" id="time11">00:00</p>
+            <p class="jersey-wr" id="wr11">1.00</p>
+            <button class="jersey" id="btn11"></button>
+        </div>
+        <div class="player" id="play12">
+            <p class="jersey-no" id="no12">12.</p>
+            <p class="jersey-name" id="name12">Player</p>
+            <p class="jersey-rot" id="rot12">0</p>
+            <p class="jersey-time" id="time12">00:00</p>
+            <p class="jersey-wr" id="wr12">1.00</p>
+            <button class="jersey" id="btn12"></button>
+        </div>
+        <div class="player" id="play13">
+          <p class="jersey-no" id="no13">13.</p>
+          <p class="jersey-name" id="name13">Player</p>
+          <p class="jersey-rot" id="rot13">0</p>
+          <p class="jersey-time" id="time13">00:00</p>
+          <p class="jersey-wr" id="wr13">1.00</p>
+          <button class="jersey topr" id="btn13"></button>
+        </div>
+        <div class="player" id="play14">
+          <p class="jersey-no" id="no14">14.</p>
+          <p class="jersey-name" id="name14">Player</p>
+          <p class="jersey-rot" id="rot14">0</p>
+          <p class="jersey-time" id="time14">00:00</p>
+          <p class="jersey-wr" id="wr14">1.00</p>
+          <button class="jersey" id="btn14"></button>
+        </div>
+        <div class="player" id="play15">
+            <p class="jersey-no" id="no15">15.</p>
+            <p class="jersey-name" id="name15">Player</p>
+            <p class="jersey-rot" id="rot15">0</p>
+            <p class="jersey-time" id="time15">00:00</p>
+            <p class="jersey-wr" id="wr15">1.00</p>
+            <button class="jersey" id="btn15"></button>
+        </div>
+        <div class="player" id="play16">
+          <p class="jersey-no" id="no16">16.</p>
+          <p class="jersey-name" id="name16">Player</p>
+          <p class="jersey-rot" id="rot16">0</p>
+          <p class="jersey-time" id="time16">00:00</p>
+          <p class="jersey-wr" id="wr16">1.00</p>
+          <button class="jersey botr" id="btn16"></button>
+        </div>
+      </div>
+      <div class="panel" id="pnl-analysis" style="overflow-y:auto;">
+        <table class="tbl-data" id="tbl-anl">
+          <tr>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</body>
+<script src="main.js"></script>
+</html>
