@@ -115,21 +115,6 @@ var tbl_match = {
     "player_no2": [-1],
     "last_name2": [""],
 }
-for (var i = 0; i<struct_general["nplay"]; i++) {
-    var timeMain = parseClock(struct_time["clock_main"],0);
-    var timePlay = parseClock(struct_time["clock_play"],1);
-    tbl_match["index"].push(i+2);
-    tbl_match["period"].push(struct_time["period"]);
-    tbl_match["min_run"].push(timeMain[0]);
-    tbl_match["sec_run"].push(timeMain[1]);
-    tbl_match["min_eff"].push(timePlay[0]);
-    tbl_match["sec_eff"].push(timePlay[1]);
-    tbl_match["result"].push("lineup");
-    tbl_match["player_no1"].push(struct_team["players"][i]["pno"]);
-    tbl_match["last_name1"].push(struct_team["players"][i]["nlast"]);
-    tbl_match["player_no2"].push(-1);
-    tbl_match["last_name2"].push("");
-}
 var tbl_period = {
     "Rotations": [],
     "Play Time": [],
@@ -176,6 +161,24 @@ clockKickOff.onclick = function() {
         IntervalM = setInterval(startMain, 1000);
         IntervalP = setInterval(startPlay, 1000);
 
+        // Update Line-Up
+        for (var i = 0; i<struct_team.players.length; i++) {
+            if (struct_team.players[i].active==1) {
+                var timeMain = parseClock(struct_time["clock_main"],0);
+                var timePlay = parseClock(struct_time["clock_play"],1);
+                tbl_match["index"].push(i+2);
+                tbl_match["period"].push(struct_time["period"]);
+                tbl_match["min_run"].push(timeMain[0]);
+                tbl_match["sec_run"].push(timeMain[1]);
+                tbl_match["min_eff"].push(timePlay[0]);
+                tbl_match["sec_eff"].push(timePlay[1]);
+                tbl_match["result"].push("lineup");
+                tbl_match["player_no1"].push(struct_team["players"][i]["pno"]);
+                tbl_match["last_name1"].push(struct_team["players"][i]["nlast"]);
+                tbl_match["player_no2"].push(-1);
+                tbl_match["last_name2"].push("");
+            }
+        }
         // Update Match Table
         updateTime();
         var timeMain = parseClock(struct_time["clock_main"],0);
@@ -620,26 +623,27 @@ function switchPlayers(selArray){
         updateLiveVis();
 
         // Update Match Table
-        updateTime();
-        var timeMain = parseClock(struct_time["clock_main"],0);
-        var timePlay = parseClock(struct_time["clock_play"],1);
-        tbl_match["index"].push(tbl_match["index"].length + 1);
-        tbl_match["period"].push(struct_time["period"]);
-        tbl_match["min_run"].push(timeMain[0]);
-        tbl_match["sec_run"].push(timeMain[1]);
-        tbl_match["min_eff"].push(timePlay[0]);
-        tbl_match["sec_eff"].push(timePlay[1]);
-        tbl_match["result"].push("substitution");
-        tbl_match["player_no1"].push(struct_team["players"][offID]["pno"]);
-        tbl_match["last_name1"].push(struct_team["players"][offID]["nlast"]);
-        tbl_match["player_no2"].push(struct_team["players"][onID]["pno"]);
-        tbl_match["last_name2"].push(struct_team["players"][onID]["nlast"]);
+        if (struct_time.kickofftgl==1) {
+            updateTime();
+            var timeMain = parseClock(struct_time["clock_main"],0);
+            var timePlay = parseClock(struct_time["clock_play"],1);
+            tbl_match["index"].push(tbl_match["index"].length + 1);
+            tbl_match["period"].push(struct_time["period"]);
+            tbl_match["min_run"].push(timeMain[0]);
+            tbl_match["sec_run"].push(timeMain[1]);
+            tbl_match["min_eff"].push(timePlay[0]);
+            tbl_match["sec_eff"].push(timePlay[1]);
+            tbl_match["result"].push("substitution");
+            tbl_match["player_no1"].push(struct_team["players"][offID]["pno"]);
+            tbl_match["last_name1"].push(struct_team["players"][offID]["nlast"]);
+            tbl_match["player_no2"].push(struct_team["players"][onID]["pno"]);
+            tbl_match["last_name2"].push(struct_team["players"][onID]["nlast"]);
+        }
         // Aesthetics
         el1.classList.add('active');
         el2.classList.remove('active');
         //checkSub();
         updateAnlUITable();
-        console.log(el1)
     }
     struct_team.players[onID].selected = 0;
     struct_team.players[offID].selected = 0;
@@ -779,7 +783,7 @@ function updateTeamInfo(mInfo, pInfo) {
     // Update Player UI Labels
     for (i=0; i<struct_team.players.length; i++) {
         elName = document.getElementById('name'+(i+1));
-        elName.innerHTML = struct_team.players[i].nlast.substring(0,6);
+        elName.innerHTML = struct_team.players[i].nlast.substring(0,5);
         elNo = document.getElementById('no'+(i+1));
         elNo.innerHTML = struct_team.players[i].pno + '.';
     }
@@ -984,7 +988,6 @@ btnExport.onclick = function() {
 //#region UI SET
 window.onload = function() {
     toggleMatch(false);
-    togglePlayers(false);
     buttonEnable(clockBreak, false);
     buttonEnable(clockPause, false);
     buttonEnable(clockStop, false);
