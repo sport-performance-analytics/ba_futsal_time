@@ -25,6 +25,7 @@
 }
 
 body {
+  height: 160vh;
   background-image: linear-gradient(180deg, #000, var(--grey0));
   /*background-image: linear-gradient(180deg, var(--grey5), var(--grey6));*/
   font-family: Helvetica;
@@ -37,6 +38,7 @@ body {
 #app-container {
   display: flex;
   justify-content: center;
+  height: fit-content;
 }
 
 #grid-container {

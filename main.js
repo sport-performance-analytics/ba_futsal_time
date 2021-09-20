@@ -434,8 +434,8 @@ function updateAnlUITable() {
 
     // METRIC COLOR SCHEME
     metCol = [  [104,108,115,24,160,251],
-                [104,108,115,79,191,111], // Play Time: Slate -> Green
-                [104,108,115,240,65,80], // Rest Time: Slate -> Red
+                [104,108,115,240,65,80], // Play Time: Slate -> Red
+                [104,108,115,79,191,111], // Rest Time: Slate -> Green
                 [216,110,11,79,191,111,24,160,251], // WR Ratio: Red -> Green -> Blue
                 [104,108,115,24,160,251]    ] // % of Period Played: Slate -> Blue
 
