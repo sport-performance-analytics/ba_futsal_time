@@ -165,7 +165,7 @@ clockKickOff.onclick = function() {
         for (var i = 0; i<struct_team.players.length; i++) {
             if (struct_team.players[i].active==1) {
                 var timeMain = parseClock(struct_time["clock_main"],0);
-                var timePlay = parseClock(struct_time["clock_play"],1);
+                var timePlay = parseClock(struct_time["clock_play"],0);
                 tbl_match["index"].push(i+2);
                 tbl_match["period"].push(struct_time["period"]);
                 tbl_match["min_run"].push(timeMain[0]);
@@ -182,7 +182,7 @@ clockKickOff.onclick = function() {
         // Update Match Table
         updateTime();
         var timeMain = parseClock(struct_time["clock_main"],0);
-        var timePlay = parseClock(struct_time["clock_play"],1);
+        var timePlay = parseClock(struct_time["clock_play"],0);
         tbl_match["index"].push(tbl_match["index"].length + 1)
         tbl_match["period"].push(struct_time["period"]);
         tbl_match["min_run"].push(timeMain[0]);
@@ -223,7 +223,7 @@ clockBreak.onclick = function() {
     // Update Match Table
     updateTime();
     var timeMain = parseClock(struct_time["clock_main"],0);
-    var timePlay = parseClock(struct_time["clock_play"],1);
+    var timePlay = parseClock(struct_time["clock_play"],0);
     tbl_match["index"].push(tbl_match["index"].length + 1)
     tbl_match["period"].push(struct_time["period"]);
     tbl_match["min_run"].push(timeMain[0]);
@@ -436,7 +436,7 @@ function updateAnlUITable() {
     metCol = [  [104,108,115,24,160,251],
                 [104,108,115,240,65,80], // Play Time: Slate -> Red
                 [104,108,115,79,191,111], // Rest Time: Slate -> Green
-                [216,110,11,79,191,111,24,160,251], // WR Ratio: Red -> Green -> Blue
+                [79,191,111,24,160,251,240,65,80], // WR Ratio: Green -> Blue --> Red
                 [104,108,115,24,160,251]    ] // % of Period Played: Slate -> Blue
 
     // TEAM ROW
@@ -497,35 +497,28 @@ function getCellColor(dataArr, idx, rgb) {
 
     return "rgb(" + rVal + "," + gVal + "," + bVal + ")"
 }
-function getCellColorWR(wr, rgbRGB) {
-    rgb = [rgbRGB[0], rgbRGB[1], rgbRGB[2], rgbRGB[3], rgbRGB[4], rgbRGB[5]];
-    if (wr>1) {
-        wr = 1/wr;
-        rgb = [rgbRGB[3], rgbRGB[4], rgbRGB[5], rgbRGB[6], rgbRGB[7], rgbRGB[8]];
+function getCellColorWR(wr, rgbGBR) {
+    rgb = [rgbGBR[3], rgbGBR[4], rgbGBR[5]];
+    if (wr<0.9) {
+        rgb = [rgbGBR[0], rgbGBR[1], rgbGBR[2]];
+    } else if (wr>1.1) {
+        rgb = [rgbGBR[6], rgbGBR[7], rgbGBR[8]];
     }
-    rVal = rgb[0]+(rgb[3]-rgb[0])*wr;
-    gVal = rgb[1]+(rgb[4]-rgb[1])*wr;
-    bVal = rgb[2]+(rgb[5]-rgb[2])*wr;
-
-    return "rgb(" + rVal + "," + gVal + "," + bVal + ")"
+    return "rgb(" + rgb[0] + "," + rgb[1] + "," + rgb[2] + ")"
 }
-function getVisColorWR(wr, rgb1, rgb2) {
-    rgb = rgb2;
-    if (wr>1) {
-        wr = 1/wr;
-        rgb = rgb1;
+function getVisColorWR(wr, rgbGBR) {
+    rgb = [rgbGBR[3], rgbGBR[4], rgbGBR[5]];
+    if (wr<0.9) {
+        rgb = [rgbGBR[0], rgbGBR[1], rgbGBR[2]];
+    } else if (wr>1.1) {
+        rgb = [rgbGBR[6], rgbGBR[7], rgbGBR[8]];
     }
-    rVal = rgb[0]+(rgb[3]-rgb[0])*wr;
-    gVal = rgb[1]+(rgb[4]-rgb[1])*wr;
-    bVal = rgb[2]+(rgb[5]-rgb[2])*wr;
-
-    return "rgb(" + rVal + "," + gVal + "," + bVal + ")"
+    return "rgb(" + rgb[0] + "," + rgb[1] + "," + rgb[2] + ")"
 }
 function updateLiveVis() {
     colG = [200,200,200,79,191,111];
-    colR = [200,200,200,249, 92, 80];
-    colGB = [24,160,251,79,191,111];
-    colRG = [240,65,80,79,191,111];
+    colR = [200,200,200,249,92,80];
+    colGBR = [79,191,111,24,160,251,249,92,80];
 
     perno = struct_time.period;
     if (perno==0) {
@@ -554,7 +547,7 @@ function updateLiveVis() {
         }
         txtWR = document.getElementById("wr" + i);
         txtWR.innerHTML = wrRatio;
-        txtWR.style.color = getVisColorWR(wrRatio, colGB, colRG);
+        txtWR.style.color = getVisColorWR(wrRatio, colGBR);
     }
 }
 function updateWRPer(pno) {
@@ -626,7 +619,7 @@ function switchPlayers(selArray){
         if (struct_time.kickofftgl==1) {
             updateTime();
             var timeMain = parseClock(struct_time["clock_main"],0);
-            var timePlay = parseClock(struct_time["clock_play"],1);
+            var timePlay = parseClock(struct_time["clock_play"],0);
             tbl_match["index"].push(tbl_match["index"].length + 1);
             tbl_match["period"].push(struct_time["period"]);
             tbl_match["min_run"].push(timeMain[0]);
@@ -690,7 +683,7 @@ btnGA.onclick = function() {
 function addGoal(lbl) {
     updateTime()
     var timeMain = parseClock(struct_time["clock_main"],0);
-    var timePlay = parseClock(struct_time["clock_play"],1);
+    var timePlay = parseClock(struct_time["clock_play"],0);
     tbl_match["index"].push(tbl_match["index"].length + 1);
     tbl_match["period"].push(struct_time["period"]);
     tbl_match["min_run"].push(timeMain[0]);
@@ -781,12 +774,6 @@ function updateTeamInfo(mInfo, pInfo) {
     btnGA.innerHTML = struct_match.initials[1] + "\n Goal";
 
     // Update Player UI Labels
-    for (i=0; i<struct_team.players.length; i++) {
-        elName = document.getElementById('name'+(i+1));
-        elName.innerHTML = struct_team.players[i].nlast.substring(0,5);
-        elNo = document.getElementById('no'+(i+1));
-        elNo.innerHTML = struct_team.players[i].pno + '.';
-    }
     updateLiveButtons();
 }
 //#endregion
@@ -824,6 +811,14 @@ btnLoadMatch.onchange = function() {
             clockPlay.innerHTML = struct_time["clock_play"];
             txtHScore.innerHTML = struct_match["score"][0];
             txtAScore.innerHTML = struct_match["score"][1];
+            // Update Team UI Labels
+            txtHome.innerHTML = struct_match.initials[0];
+            txtAway.innerHTML = struct_match.initials[1];
+            txtHome.style.fontSize = "2vh"
+            txtAway.style.fontSize = "2vh"
+            btnGH.innerHTML = struct_match.initials[0] + "\n Goal";
+            btnGA.innerHTML = struct_match.initials[1] + "\n Goal";
+
             // UPDATE ENABLES
             if (struct_time["pausetgl"]==1) {
                 buttonEnable(clockKickOff, false);
@@ -850,6 +845,13 @@ btnLoadMatch.onchange = function() {
 };
 
 function updateLiveButtons() {
+    // Update Player UI Labels
+    for (i=0; i<struct_team.players.length; i++) {
+        elName = document.getElementById('name'+(i+1));
+        elName.innerHTML = struct_team.players[i].nlast.substring(0,5);
+        elNo = document.getElementById('no'+(i+1));
+        elNo.innerHTML = struct_team.players[i].pno + '.';
+    }
     for (i=1; i<=struct_team.players.length; i++) {
         el = document.getElementById("play" + i)
         if (el.classList.contains('active')) {
