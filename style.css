@@ -44,14 +44,14 @@ body {
 #grid-container {
   display: grid;
   grid-template-columns: 16vw 16vw 16vw 16vw 21vw;
-  grid-template-rows: 8vh 17vh 17vh 17vh 17vh 17vh 40vh;
+  grid-template-rows: 8vh 22vh 22vh 14vh 14vh 14vh 40vh;
   gap: 1vh 1vw;
   grid-template-areas:
     "header header header header header"
     "pnl-field pnl-field pnl-field pnl-field pnl-time"
-    "pnl-field pnl-field pnl-field pnl-field pnl-time"
     "pnl-field pnl-field pnl-field pnl-field pnl-stop"
-    "pnl-field pnl-field pnl-field pnl-field pnl-stop"
+    "pnl-field pnl-field pnl-field pnl-field pnl-metrics"
+    "pnl-field pnl-field pnl-field pnl-field pnl-metrics"
     "pnl-field pnl-field pnl-field pnl-field pnl-match"
     "pnl-analysis pnl-analysis pnl-analysis pnl-analysis pnl-analysis";
 }
@@ -251,6 +251,18 @@ body {
     "clock-play clock-play clock-play";
   grid-area: pnl-stop;
 }
+
+#pnl-metrics {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 1vh 0.5vw;
+  grid-template-areas:
+  "met-one"
+  "met-two";
+  grid-area: pnl-metrics;
+}
+
 #pnl-match {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
@@ -273,6 +285,88 @@ body {
     "btn9 btn10 btn11 btn12"
     "btn13 btn14 btn15 btn16";
   grid-area: pnl-field;
+}
+
+/* METRICS */
+.metric {
+  background-image: linear-gradient(180deg, var(--grey3), var(--grey2));
+  border-radius: 0.75vh;
+  padding: 1vh;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 0.25vh 0.25vw;
+  display: grid;
+}
+.met-lbl {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2vh;
+  font-family: Helvetica;
+  color: var(--grey6);
+  border-radius: 0.75vh;
+  background-image: linear-gradient(180deg, var(--slate2), var(--grey2));
+}
+.met-val {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3vh;
+  font-weight: normal;
+  font-family: Helvetica;
+  text-align: center;
+  background-image: linear-gradient(180deg, var(--yellow1), var(--yellow2));
+  border-radius: 0.75vh;
+}
+.met-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 4vh;
+  font-weight: bolder;
+  font-family: Helvetica;
+  border-radius: 0.75vh;
+  width: 100%;
+  color: var(--grey6);
+  border-radius: 0.75vh;
+}
+.met-btn.pos {
+  border-radius: 0.75vh;
+  background-image: linear-gradient(180deg, var(--green1), var(--green2));
+}
+.met-btn.neg {
+  border-radius: 0.75vh;
+  background-image: linear-gradient(180deg, var(--red1), var(--red2));
+}
+#met-one {
+  grid-template-areas:
+    "m1-lbl m1-lbl m1-lbl"
+    "m1-pos m1-neg ...";
+  grid-area: met-one;
+}
+#met-two {
+  grid-template-areas:
+    "m2-lbl m2-lbl m2-lbl"
+    "m2-pos m2-neg ...";
+  grid-area: met-two;
+}
+#m1-lbl {
+  grid-area: m1-lbl;
+}
+#m2-lbl {
+  grid-area: m2-lbl;
+}
+#m1-pos {
+  grid-area: m1-pos;
+}
+#m1-neg {
+  grid-area: m1-neg;
+}
+#m2-pos {
+  grid-area: m2-pos;
+}
+#m2-neg {
+  grid-area: m2-neg;
 }
 
 /* INPUTS */
@@ -475,7 +569,7 @@ body {
 
 #clock-main {
   grid-area: clock-main;
-  font-size: 6vh;
+  font-size: 5vh;
   height: 100%;
   width: 100%;
   border-radius: 0vh 0vh 0.75vh 0.75vh;
@@ -497,7 +591,7 @@ body {
 
 #clock-play {
   grid-area: clock-play;
-  font-size: 8vh;
+  font-size: 6vh;
   font-weight: bold;
   height: 100%;
   width: 100%;

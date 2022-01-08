@@ -44,6 +44,16 @@ var btnP15 = document.getElementById("btn15");
 var btnP16 = document.getElementById("btn16");
 var btnGH = document.getElementById("goal-h");
 var btnGA = document.getElementById("goal-a");
+//Metrics
+var btnM1Lbl = document.getElementById("m1-lbl");
+var btnM2Lbl = document.getElementById("m2-lbl");
+var btnM1Val = document.getElementById("m1-val");
+var btnM2Val = document.getElementById("m2-val");
+var btnM1Pos = document.getElementById("m1-pos");
+var btnM2Pos = document.getElementById("m2-pos");
+var btnM1Neg = document.getElementById("m1-neg");
+var btnM2Neg = document.getElementById("m2-neg");
+
 //Analysis
 var tblAnl = document.getElementById("tbl-anl");
 
@@ -58,7 +68,11 @@ var struct_general = {  // Generic Container
     "nsub": 11,
     "per_lbl": ["1H", "2H", "ET1", "ET2"],
     "nper": 4,
-    "per_time": [20, 20, 5, 5]
+    "per_time": [20, 20, 5, 5],
+    "metric_one": "Metric One",
+    "metric_two": "Metric Two",
+    "metric_one_val": 0,
+    "metric_two_val": 0
 };
 var struct_time = { // Time Container
     "period": clockPer.innerHTML,
@@ -114,6 +128,17 @@ var tbl_match = {
     "last_name1": [""],
     "player_no2": [-1],
     "last_name2": [""],
+}
+var tbl_metrics = {
+    "index": [],
+    "period": [],
+    "min_run": [],
+    "sec_run": [],
+    "min_eff": [],
+    "sec_eff": [],
+    "metric": [],
+    "result": [],
+    "total": []
 }
 var tbl_period = {
     "Rotations": [],
@@ -699,6 +724,48 @@ function addGoal(lbl) {
 
 //#endregion
 
+//#region Metrics
+function addMetric(metric, result, total) {
+    updateTime();
+    var timeMain = parseClock(struct_time["clock_main"],0);
+    var timePlay = parseClock(struct_time["clock_play"],0);
+    tbl_metrics["index"].push(tbl_metrics["index"].length + 1);
+    tbl_metrics["period"].push(struct_time["period"]);
+    tbl_metrics["min_run"].push(timeMain[0]);
+    tbl_metrics["sec_run"].push(timeMain[1]);
+    tbl_metrics["min_eff"].push(timePlay[0]);
+    tbl_metrics["sec_eff"].push(timePlay[1]);
+    tbl_metrics["metric"].push(metric);
+    tbl_metrics["result"].push(result);
+    tbl_metrics["total"].push(total);
+}
+
+btnM1Pos.onclick = function() {
+    btnM1Val.innerHTML++;
+    struct_general.metric_one_val = btnM1Val.innerHTML;
+    addMetric(btnM1Lbl.innerHTML, "+1", btnM1Val.innerHTML);
+}
+btnM1Neg.onclick = function() {
+    if (btnM1Val.innerHTML > 0) {
+        btnM1Val.innerHTML--;
+        struct_general.metric_one_val = btnM1Val.innerHTML;
+        addMetric(btnM1Lbl.innerHTML, "-1", btnM1Val.innerHTML);
+    }
+}
+btnM2Pos.onclick = function() {
+    btnM2Val.innerHTML++;
+    struct_general.metric_two_val = btnM2Val.innerHTML;
+    addMetric(btnM2Lbl.innerHTML, "+1", btnM2Val.innerHTML);
+}
+btnM2Neg.onclick = function() {
+    if (btnM2Val.innerHTML > 0) {
+        btnM2Val.innerHTML--;
+        struct_general.metric_two_val = btnM2Val.innerHTML;
+        addMetric(btnM2Lbl.innerHTML, "-1", btnM2Val.innerHTML);
+    }
+}
+//#endregion
+
 //#region Load Team
 btnLoadTeam.onchange = function() {loadTeamInfo()};
 
@@ -793,6 +860,7 @@ btnLoadMatch.onchange = function() {
             struct_team = match_data["team"];
             tbl_match = match_data["tbl_match"];
             tbl_period = match_data["tbl_period"];
+            tbl_metrics = match_data["tbl_metrics"];
 
             // UPDATE MINUTES + SECONDS        
             var timeMain = parseClock(struct_time["clock_main"],0);
@@ -818,6 +886,10 @@ btnLoadMatch.onchange = function() {
             txtAway.style.fontSize = "2vh"
             btnGH.innerHTML = struct_match.initials[0] + "\n Goal";
             btnGA.innerHTML = struct_match.initials[1] + "\n Goal";
+            btnM1Lbl.innerHTML = struct_general.metric_one;
+            btnM2Lbl.innerHTML = struct_general.metric_two;
+            btnM1Val.innerHTML = struct_general.metric_one_val;
+            btnM2Val.innerHTML = struct_general.metric_two_val;
 
             // UPDATE ENABLES
             if (struct_time["pausetgl"]==1) {
@@ -873,6 +945,7 @@ btnSave.onclick = function() {
         "time": struct_time,
         "team": struct_team,
         "tbl_match": tbl_match,
+        "tbl_metrics": tbl_metrics,
         "tbl_period": tbl_period
     }
     var blob = new Blob([JSON.stringify(struct)], {type: "text/plain;charset=utf-8"});
@@ -944,6 +1017,21 @@ btnExport.onclick = function() {
         }
     }
 
+    // Metrics Tab
+    var dataMetrics = [];
+    // Header
+    dataMetrics.push(Object.keys(tbl_metrics));
+    // Data
+    if (tbl_metrics["index"].length > 0) {
+        for (var row=0; row<tbl_metrics["index"].length; row++) {
+            var datarow = [];
+            for (var col=0; col<Object.keys(tbl_metrics).length; col++) {
+                datarow.push(tbl_metrics[Object.keys(tbl_metrics)[col]][row])
+            }
+            dataMetrics.push(datarow.slice());
+        }
+    }
+
     // Playing Stats Tab
     var dataPlayEvents = [];
     var metrics = Object.keys(tbl_period); // Rotations, Play Time, Rest Time, W/R
@@ -978,6 +1066,7 @@ btnExport.onclick = function() {
     wb = pushSheet(wb, "Match Info", dataMatchInfo);
     wb = pushSheet(wb, "Team Info", dataTeamInfo);
     wb = pushSheet(wb, "Match Events", dataMatchEvents);
+    wb = pushSheet(wb, "Metrics", dataMetrics);
     wb = pushSheet(wb, "Playing Stats", dataPlayEvents);
 
     // Export
