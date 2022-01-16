@@ -47,12 +47,31 @@ var btnGA = document.getElementById("goal-a");
 //Metrics
 var btnM1Lbl = document.getElementById("m1-lbl");
 var btnM2Lbl = document.getElementById("m2-lbl");
-var btnM1Val = document.getElementById("m1-val");
-var btnM2Val = document.getElementById("m2-val");
-var btnM1Pos = document.getElementById("m1-pos");
-var btnM2Pos = document.getElementById("m2-pos");
-var btnM1Neg = document.getElementById("m1-neg");
-var btnM2Neg = document.getElementById("m2-neg");
+var btnM3Lbl = document.getElementById("m3-lbl");
+var btnM1H = document.getElementById("m1-h");
+var btnM2H = document.getElementById("m2-h");
+var btnM3H = document.getElementById("m3-h");
+var btnM1A = document.getElementById("m1-a");
+var btnM2A = document.getElementById("m2-a");
+var btnM3A = document.getElementById("m3-a");
+var btnM1ValH = document.getElementById("m1-val-h");
+var btnM2ValH = document.getElementById("m2-val-h");
+var btnM3ValH = document.getElementById("m3-val-h");
+var btnM1ValA = document.getElementById("m1-val-a");
+var btnM2ValA = document.getElementById("m2-val-a");
+var btnM3ValA = document.getElementById("m3-val-a");
+var btnM1PosH = document.getElementById("m1-pos-h");
+var btnM2PosH = document.getElementById("m2-pos-h");
+var btnM3PosH = document.getElementById("m3-pos-h");
+var btnM1NegH = document.getElementById("m1-neg-h");
+var btnM2NegH = document.getElementById("m2-neg-h");
+var btnM3NegH = document.getElementById("m3-neg-h");
+var btnM1PosA = document.getElementById("m1-pos-a");
+var btnM2PosA = document.getElementById("m2-pos-a");
+var btnM3PosA = document.getElementById("m3-pos-a");
+var btnM1NegA = document.getElementById("m1-neg-a");
+var btnM2NegA = document.getElementById("m2-neg-a");
+var btnM3NegA = document.getElementById("m3-neg-a");
 
 //Analysis
 var tblAnl = document.getElementById("tbl-anl");
@@ -69,10 +88,8 @@ var struct_general = {  // Generic Container
     "per_lbl": ["1H", "2H", "ET1", "ET2"],
     "nper": 4,
     "per_time": [20, 20, 5, 5],
-    "metric_one": "Metric One",
-    "metric_two": "Metric Two",
-    "metric_one_val": 0,
-    "metric_two_val": 0
+    "metric_name": ["Shots", "Incomplete Passes", "Possession Loss"],
+    "metric_val": [[0, 0], [0, 0], [0, 0]]
 };
 var struct_time = { // Time Container
     "period": clockPer.innerHTML,
@@ -136,9 +153,11 @@ var tbl_metrics = {
     "sec_run": [],
     "min_eff": [],
     "sec_eff": [],
+    "team": [],
     "metric": [],
     "result": [],
-    "total": []
+    "total_home": [],
+    "total_away": []
 }
 var tbl_period = {
     "Rotations": [],
@@ -232,6 +251,7 @@ clockKickOff.onclick = function() {
         buttonEnable(btnSave, false)
         buttonEnable(btnExport, false)
         toggleMatch(true)
+        toggleMetrics(true)
         togglePlayers(true)
         // Button Aesthetics
         clockPer.classList.remove('break');
@@ -281,6 +301,7 @@ clockBreak.onclick = function() {
     buttonEnable(btnSave, true)
     buttonEnable(btnExport, true)
     toggleMatch(false)
+    toggleMetrics(false)
     // Button Aesthetics
     clockPer.classList.add('break');
     clockMain.classList.add('break');
@@ -725,7 +746,7 @@ function addGoal(lbl) {
 //#endregion
 
 //#region Metrics
-function addMetric(metric, result, total) {
+function addMetric(team, metric, result, total) {
     updateTime();
     var timeMain = parseClock(struct_time["clock_main"],0);
     var timePlay = parseClock(struct_time["clock_play"],0);
@@ -735,35 +756,66 @@ function addMetric(metric, result, total) {
     tbl_metrics["sec_run"].push(timeMain[1]);
     tbl_metrics["min_eff"].push(timePlay[0]);
     tbl_metrics["sec_eff"].push(timePlay[1]);
+    tbl_metrics["team"].push(team);
     tbl_metrics["metric"].push(metric);
     tbl_metrics["result"].push(result);
-    tbl_metrics["total"].push(total);
+    tbl_metrics["total_home"].push(total[0]);
+    tbl_metrics["total_away"].push(total[1]);
 }
 
-btnM1Pos.onclick = function() {
-    btnM1Val.innerHTML++;
-    struct_general.metric_one_val = btnM1Val.innerHTML;
-    addMetric(btnM1Lbl.innerHTML, "+1", btnM1Val.innerHTML);
-}
-btnM1Neg.onclick = function() {
-    if (btnM1Val.innerHTML > 0) {
-        btnM1Val.innerHTML--;
-        struct_general.metric_one_val = btnM1Val.innerHTML;
-        addMetric(btnM1Lbl.innerHTML, "-1", btnM1Val.innerHTML);
+function metricChange(metricNo, teamNo, result, metVal, metLbl) {
+    // Update metric labels
+    struct_general.metric_name[metricNo] = metLbl.innerHTML;
+    if (result==1) {
+        metVal.innerHTML++; // Update HTML value label
+        struct_general.metric_val[metricNo][teamNo] = metVal.innerHTML; // Update structure value        
+        addMetric(struct_match.teams[teamNo], struct_general.metric_name[metricNo], result, struct_general.metric_val[metricNo])
+    } else {
+        if (metVal.innerHTML > 0) {
+            metVal.innerHTML--; // Update HTML value label
+            struct_general.metric_val[metricNo][teamNo] = metVal.innerHTML; // Update structure value        
+            addMetric(struct_match.teams[teamNo], struct_general.metric_name[metricNo], result, struct_general.metric_val[metricNo])
+        }
     }
 }
-btnM2Pos.onclick = function() {
-    btnM2Val.innerHTML++;
-    struct_general.metric_two_val = btnM2Val.innerHTML;
-    addMetric(btnM2Lbl.innerHTML, "+1", btnM2Val.innerHTML);
+
+btnM1PosH.onclick = function() {
+    metricChange(0,0,1,btnM1ValH,btnM1Lbl);
 }
-btnM2Neg.onclick = function() {
-    if (btnM2Val.innerHTML > 0) {
-        btnM2Val.innerHTML--;
-        struct_general.metric_two_val = btnM2Val.innerHTML;
-        addMetric(btnM2Lbl.innerHTML, "-1", btnM2Val.innerHTML);
-    }
+btnM1NegH.onclick = function() {
+    metricChange(0,0,-1,btnM1ValH,btnM1Lbl);
 }
+btnM1PosA.onclick = function() {
+    metricChange(0,1,1,btnM1ValA,btnM1Lbl);
+}
+btnM1NegA.onclick = function() {
+    metricChange(0,1,-1,btnM1ValA,btnM1Lbl);
+}
+btnM2PosH.onclick = function() {
+    metricChange(1,0,1,btnM2ValH,btnM2Lbl);
+}
+btnM2NegH.onclick = function() {
+    metricChange(1,0,-1,btnM2ValH,btnM2Lbl);
+}
+btnM2PosA.onclick = function() {
+    metricChange(1,1,1,btnM2ValA,btnM2Lbl);
+}
+btnM2NegA.onclick = function() {
+    metricChange(1,1,-1,btnM2ValA,btnM2Lbl);
+}
+btnM3PosH.onclick = function() {
+    metricChange(2,0,1,btnM3ValH,btnM3Lbl);
+}
+btnM3NegH.onclick = function() {
+    metricChange(2,0,-1,btnM3ValH,btnM3Lbl);
+}
+btnM3PosA.onclick = function() {
+    metricChange(2,1,1,btnM3ValA,btnM3Lbl);
+}
+btnM3NegA.onclick = function() {
+    metricChange(2,1,-1,btnM3ValA,btnM3Lbl);
+}
+
 //#endregion
 
 //#region Load Team
@@ -801,7 +853,6 @@ function loadTeamInfo() {
         playerInfo["nfirst"].push(sheet["C"+i]["v"]);
         playerInfo["nlast"].push(sheet["D"+i]["v"]);
         playerInfo["position"].push(sheet["E"+i]["v"]);
-        console.log(sheet["D" + i]["v"])
       }
       updateTeamInfo(matchInfo, playerInfo);
       updateAnlUITable();
@@ -833,6 +884,12 @@ function updateTeamInfo(mInfo, pInfo) {
     }
 
     // Update Team UI Labels
+    btnM1H.innerHTML = struct_match.initials[0];
+    btnM2H.innerHTML = struct_match.initials[0];
+    btnM3H.innerHTML = struct_match.initials[0];
+    btnM1A.innerHTML = struct_match.initials[1];
+    btnM2A.innerHTML = struct_match.initials[1];
+    btnM3A.innerHTML = struct_match.initials[1];
     txtHome.innerHTML = struct_match.initials[0];
     txtAway.innerHTML = struct_match.initials[1];
     txtHome.style.fontSize = "2vh"
@@ -886,10 +943,15 @@ btnLoadMatch.onchange = function() {
             txtAway.style.fontSize = "2vh"
             btnGH.innerHTML = struct_match.initials[0] + "\n Goal";
             btnGA.innerHTML = struct_match.initials[1] + "\n Goal";
-            btnM1Lbl.innerHTML = struct_general.metric_one;
-            btnM2Lbl.innerHTML = struct_general.metric_two;
-            btnM1Val.innerHTML = struct_general.metric_one_val;
-            btnM2Val.innerHTML = struct_general.metric_two_val;
+            btnM1Lbl.innerHTML = struct_general.metric_name[0];
+            btnM2Lbl.innerHTML = struct_general.metric_name[1];
+            btnM3Lbl.innerHTML = struct_general.metric_name[2];
+            btnM1ValH.innerHTML = struct_general.metric_val[0][0];
+            btnM1ValA.innerHTML = struct_general.metric_val[0][1];
+            btnM2ValH.innerHTML = struct_general.metric_val[1][0];
+            btnM2ValA.innerHTML = struct_general.metric_val[1][1];
+            btnM3ValH.innerHTML = struct_general.metric_val[2][0];
+            btnM3ValA.innerHTML = struct_general.metric_val[2][1];
 
             // UPDATE ENABLES
             if (struct_time["pausetgl"]==1) {
@@ -909,6 +971,7 @@ btnLoadMatch.onchange = function() {
 
                 togglePlayers(true);
                 toggleMatch(true);
+                toggleMetrics(true);
             } else {
                 buttonEnable(btnExport, true);
             }
@@ -1079,6 +1142,7 @@ btnExport.onclick = function() {
 //#region UI SET
 window.onload = function() {
     toggleMatch(false);
+    toggleMetrics(false);
     buttonEnable(clockBreak, false);
     buttonEnable(clockPause, false);
     buttonEnable(clockStop, false);
@@ -1119,6 +1183,35 @@ function toggleMatch(tgl) {
     } else {
         txtHScore.classList.remove("break");
         txtAScore.classList.remove("break");
+    }
+}
+function toggleMetrics(tgl) {
+    buttonEnable(btnM1PosH, tgl);
+    buttonEnable(btnM1PosA, tgl);
+    buttonEnable(btnM1NegH, tgl);
+    buttonEnable(btnM1NegA, tgl);
+    buttonEnable(btnM2PosH, tgl);
+    buttonEnable(btnM2PosA, tgl);
+    buttonEnable(btnM2NegH, tgl);
+    buttonEnable(btnM2NegA, tgl);
+    buttonEnable(btnM3PosH, tgl);
+    buttonEnable(btnM3PosA, tgl);
+    buttonEnable(btnM3NegH, tgl);
+    buttonEnable(btnM3NegA, tgl);
+    if (tgl==false) {
+        btnM1ValH.classList.add("break");
+        btnM1ValA.classList.add("break");
+        btnM2ValH.classList.add("break");
+        btnM2ValA.classList.add("break");
+        btnM3ValH.classList.add("break");
+        btnM3ValA.classList.add("break");
+    } else {
+        btnM1ValH.classList.remove("break");
+        btnM1ValA.classList.remove("break");
+        btnM2ValH.classList.remove("break");
+        btnM2ValA.classList.remove("break");
+        btnM3ValH.classList.remove("break");
+        btnM3ValA.classList.remove("break");
     }
 }
 function getKeyArray(dictname, keyname) {
