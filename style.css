@@ -1,7 +1,7 @@
 :root {
   --grey0:#2e353d;
   --grey1:#353c45;
-  --grey2:#444b53;
+  --grey2:#4a525a;
   --grey3:#686c73;
   --grey4:#8c939c;
   --grey5:#c2c8cf;
@@ -13,6 +13,7 @@
   --red0: #da626c;
   --red1: #f04150;
   --red2: #a71919;
+  --red3: #e63232;
   --blue1: #57d3dc;
   --blue2: #2767b0;
   --blue3: #18A0FB;
@@ -117,7 +118,7 @@ body {
   position: relative;
   border-style: solid;
   border-radius: 5%;
-  background-color: var(--grey3);
+  background-color: var(--grey2);
   height: 100%;
   width: 100%;
   outline: none;
@@ -128,7 +129,7 @@ body {
     inset 0 -0.75vh 0 var(--yellow1),
     inset 0.75vh 0 0 var(--yellow1),
     inset 0 0.75vh 0 var(--yellow1);
-  background-color: var(--grey2);
+  background-color: var(--grey0);
 }
 .selected {
   opacity: 0.5;
@@ -201,15 +202,49 @@ body {
 
 .jersey-wr {
   position: absolute;
-  top: 60%;
+  top: 65%;
   left: 5%;
   height: 20%;
   width: 90%;
-  font-size: 3vh;
+  font-size: 2.5vh;
   font-weight: bold;
   font-family: Helvetica;
   text-align: center;
   color: var(--slate1);
+}
+
+.jersey-tp {
+  position: absolute;
+  top: 70%;
+  left: 2%;
+  height: 15%;
+  width: 25%;
+  font-size: 2vh;
+  font-weight: bold;
+  font-family: Helvetica;
+  text-align: center;
+  color: var(--green1);
+  border-radius: 30%;
+  border-top-style: solid;
+  border-right-style: solid;
+  border-width: 2px;
+}
+
+.jersey-tr {
+  position: absolute;
+  top: 70%;
+  left: 71%;
+  height: 15%;
+  width: 25%;
+  font-size: 2vh;
+  font-weight: bold;
+  font-family: Helvetica;
+  text-align: center;
+  color: var(--red1);
+  border-radius: 30%;
+  border-top-style: solid;
+  border-left-style: solid;
+  border-width: 2px;
 }
 
 /* PANELS */
