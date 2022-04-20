@@ -1010,7 +1010,7 @@ function updateLiveButtons() {
     // Update Player UI Labels
     for (i=0; i<struct_team.players.length; i++) {
         elName = document.getElementById('name'+(i+1));
-        elName.innerHTML = struct_team.players[i].nlast.substring(0,5);
+        elName.innerHTML = struct_team.players[i].nlast.substring(0,8);
         elNo = document.getElementById('no'+(i+1));
         elNo.innerHTML = struct_team.players[i].pno + '.';
     }

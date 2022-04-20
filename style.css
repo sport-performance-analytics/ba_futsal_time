@@ -161,13 +161,13 @@ body {
 
 .jersey-name {
   position: absolute;
-  top: -5%;
-  left: 25%;
-  width: 55%;
-  font-size: 3vh;
+  top: 0%;
+  left: -2.5%;
+  width: 100%;
+  font-size: 2.75vh;
   font-weight: normal;
   font-family: Helvetica;
-  text-align: left;
+  text-align: center;
   padding: 2%;
   
   color: var(--grey6);
@@ -175,10 +175,10 @@ body {
 
 .jersey-rot {
   position: absolute;
-  top: -5%;
-  left: 72%;
-  width: 18%;
-  font-size: 3vh;
+  top: 0%;
+  left: 76%;
+  width: 15%;
+  font-size: 2.5vh;
   font-weight: normal;
   font-family: Helvetica;
   text-align: center;
