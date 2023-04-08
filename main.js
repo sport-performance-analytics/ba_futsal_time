@@ -347,6 +347,7 @@ clockPause.onclick = function() {
     }
 }
 clockStop.onclick = function() {
+    let tgl_string = "";
     if(struct_time["stoptgl"]==0){
         clearInterval(IntervalP);
         struct_time["stoptgl"] = 1;
@@ -355,6 +356,7 @@ clockStop.onclick = function() {
         
         clockStop.classList.add('toggle');
         clockPlay.classList.add('pause');
+        tgl_string = "stoppage"
     } else {
         IntervalP = setInterval(startPlay, 1000);
         struct_time["stoptgl"] = 0;
@@ -363,7 +365,22 @@ clockStop.onclick = function() {
         
         clockStop.classList.remove('toggle');
         clockPlay.classList.remove('pause');
+        tgl_string = "restart"
     }
+    // Update Match Table
+    updateTime();
+    var timeMain = parseClock(struct_time["clock_main"],0);
+    var timePlay = parseClock(struct_time["clock_play"],0);
+    tbl_match["index"].push(tbl_match["index"].length + 1)
+    tbl_match["period"].push(struct_time["period"]);
+    tbl_match["min_run"].push(timeMain[0]);
+    tbl_match["sec_run"].push(timeMain[1]);
+    tbl_match["min_eff"].push(timePlay[0]);
+    tbl_match["sec_eff"].push(timePlay[1]);
+    tbl_match["result"].push(tgl_string);
+    tbl_match["player_no"].push(-1);
+    tbl_match["last_name"].push("");
+    tbl_match["active"].push("");
 }
 function startMain() {
     secondsM++;
@@ -609,9 +626,9 @@ function updateLiveVis() {
         txtWR.style.color = getVisColorWR(wrRatio, colGBR);
 
         txtTP = document.getElementById("tp" + i);
-        txtTP.innerHTML = setClock(struct_team.players[i-1].totplay);
+        txtTP.innerHTML = setClock(struct_team.players[i-1].tplay);
         txtTR = document.getElementById("tr" + i);
-        txtTR.innerHTML = setClock(struct_team.players[i-1].totrest);
+        txtTR.innerHTML = setClock(struct_team.players[i-1].trest);
     }
 }
 function updateWRPer(pno) {
