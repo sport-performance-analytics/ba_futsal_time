@@ -1163,6 +1163,18 @@ btnExport.onclick = function() {
     var fileName = struct_match["teams"][0] + "_" + struct_match["teams"][1] + "_" + struct_match["date"] + ".xlsx";
     var wbout = XLSX.write(wb, {bookType:'xlsx',  type: 'binary'});
     saveAs(new Blob([s2ab(wbout)],{type:"application/octet-stream"}), fileName);
+
+    // SAVE JSON
+    saveAs(new Blob([JSON.stringify(dataMatchInfo)], {type: "text/plain;charset=utf-8"}),
+        struct_match["teams"][0] + "_" + struct_match["teams"][1] + "_" + struct_match["date"] + "_matchinfo.txt");
+    saveAs(new Blob([JSON.stringify(dataTeamInfo)], {type: "text/plain;charset=utf-8"}),
+        struct_match["teams"][0] + "_" + struct_match["teams"][1] + "_" + struct_match["date"] + "_teaminfo.txt");
+    saveAs(new Blob([JSON.stringify(dataMatchEvents)], {type: "text/plain;charset=utf-8"}),
+        struct_match["teams"][0] + "_" + struct_match["teams"][1] + "_" + struct_match["date"] + "_matchevents.txt");
+    saveAs(new Blob([JSON.stringify(dataMetrics)], {type: "text/plain;charset=utf-8"}),
+        struct_match["teams"][0] + "_" + struct_match["teams"][1] + "_" + struct_match["date"] + "_metrics.txt");
+    saveAs(new Blob([JSON.stringify(dataPlayEvents)], {type: "text/plain;charset=utf-8"}),
+        struct_match["teams"][0] + "_" + struct_match["teams"][1] + "_" + struct_match["date"] + "_playevents.txt");
 };
 //#endregion
 
