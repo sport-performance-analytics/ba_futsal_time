@@ -101,11 +101,11 @@ var struct_time = { // Time Container
     "stoptgl": 0
 }
 var struct_match = { // Match Information Container
-    "date": [00, 00, 00], // YYYY-MM-DD
+    "date": ['00', '00', '00'], // YYYY-MM-DD
     "location": "Stadium",
     "competition": "Competition",
     "stage": "Stage",
-    "kickoff": [00, 00], // 00h:00
+    "kickoff": ['00', '00'], // 00h:00
     "score": [0, 0], // Home, Away
     "teams": ["Home Team", "Away Team"],
     "initials": ["HOME", "AWAY"]
@@ -1181,6 +1181,7 @@ btnExport.onclick = function() {
     var wbout = XLSX.write(wb, {bookType:'xlsx',  type: 'binary'});
     saveAs(new Blob([s2ab(wbout)],{type:"application/octet-stream"}), fileName);
 
+    /*
     // SAVE JSON
     saveAs(new Blob([JSON.stringify(dataMatchInfo)], {type: "text/plain;charset=utf-8"}),
         struct_match["teams"][0] + "_" + struct_match["teams"][1] + "_" + struct_match["date"] + "_matchinfo.txt");
@@ -1192,6 +1193,7 @@ btnExport.onclick = function() {
         struct_match["teams"][0] + "_" + struct_match["teams"][1] + "_" + struct_match["date"] + "_metrics.txt");
     saveAs(new Blob([JSON.stringify(dataPlayEvents)], {type: "text/plain;charset=utf-8"}),
         struct_match["teams"][0] + "_" + struct_match["teams"][1] + "_" + struct_match["date"] + "_playevents.txt");
+    */
 };
 //#endregion
 
