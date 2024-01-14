@@ -11,18 +11,20 @@
   <div id="app-container">
     <div id="grid-container">
       <div class="panel header" id="header">
-        <img src="breakaway.png" alt="ba logo" id="ba-logo-img">
-        <label class="load-file" id="lbl-head-team">
-          <input type="file" class="head-input" id="head-team">
-          Load Team
-        </label>
-        <label class="load-file" id="lbl-head-match">
-          <input type="file" class="head-input" id="head-match">
-          Load Match
-        </label>
-        <button class="button-1 head" id="head-save">Save Match</button>
-        <button class="button-1 head" id="head-export">Export Data</button>
-      </div>
+        <div style="width: 100%; text-align: center; font-size: 2.5vh; font-weight: bold;">BreakAway Time: Futsal</div>
+        <div style="display: flex; flex-direction: row; width: 100%;">
+          <label class="load-file" id="lbl-head-team" style="height: 3vh;">
+            <input type="file" class="head-input" id="head-team">
+            Load Team
+          </label>
+          <label class="load-file" id="lbl-head-match" style="height: 3vh;">
+            <input type="file" class="head-input" id="head-match">
+            Load Match
+          </label>
+          <button class="button-1 head" id="head-save" style="height: 3vh;">Save Match</button>
+          <button class="button-1 head" id="head-export" style="height: 3vh;">Export Data</button>
+        </div>
+        </div>
       <div class="panel" id="pnl-time">
         <label class="txt-lbl" for="period" id="lbl-period">PERIOD:</label>
         <p class="txt-1 period break" id="period">0</p>
